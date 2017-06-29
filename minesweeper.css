@@ -1,0 +1,94 @@
+body {
+	margin: 0;
+}
+.minesweeper {
+	position: relative;
+	
+	width: 100%;
+	height: 100vh;
+	background: gold;
+	display: flex;
+	flex-direction: column;
+}
+.minesweeper-controls {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 100%;
+	padding: 2rem;
+	color: white;
+	text-align: center;
+	background: rgba(0,0,0,.8);
+}
+.minesweeper-controls.-expanded {
+	right: 0;
+	left: inherit;
+}
+.minesweeper-controls .expand-toggle {
+	cursor: pointer;
+	position: absolute;
+	right: 100%;
+	top: 0;
+	border: none;
+	background: rgba(0,0,0,.8);
+	color: white;
+	padding: .4rem 1rem;
+}
+.minesweeper-controls .expand-toggle:focus {
+	outline: none;
+}
+.minesweeper-status {
+	
+	background: white;
+}
+.minesweeper-board {
+	border: solid 1px #888;
+	box-sizing: border-box;
+
+	flex-grow: 1;
+	display: flex;
+		flex-flow: row wrap;
+}
+.minesweeper-board-item {
+	cursor: pointer;
+	box-sizing: border-box;
+	text-align: center;
+	background: #ddd;
+	overflow: hidden;
+	border: solid 1px #888;
+	color: #888;
+	text-indent: 100%;
+	transition: background .5s ease-in-out, border-color .5s ease-in-out;
+	/*transform: scale(2);*/
+
+	flex-grow: 1;
+}
+.minesweeper-board-item:hover {
+	background: #666;
+}
+.minesweeper-board-item.-cleared {
+	border: solid 1px #eee;
+	background: white;
+	color: #888;
+	cursor: default;
+}
+.minesweeper-board-item.-flagged {
+	border: solid 1px #eee;
+	background: #4aff86;
+	color: #888;
+	cursor: default;
+}
+.minesweeper-board-item.-border {
+	border: solid 1px #666;
+	background: #666;
+	color: #eee;
+	text-indent: 0;
+}
+.minesweeper-board-item.-exploded {
+	border: solid 1px #666;
+	background: #ff517c;
+	color: #eee;
+}
+.minesweeper-board-item.-exploded.-flagged {
+	background: #00c854;
+}
