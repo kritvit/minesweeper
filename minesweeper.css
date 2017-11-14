@@ -52,7 +52,7 @@ body {
 	display: flex;
 		flex-flow: row wrap;
 }
-.minesweeper-board-item {
+.minesweeper-item {
 	cursor: pointer;
 	box-sizing: border-box;
 	text-align: center;
@@ -66,32 +66,32 @@ body {
 
 	flex-grow: 1;
 }
-.minesweeper-board-item:hover {
+.minesweeper-item:hover {
 	background: #666;
 }
-.minesweeper-board-item.-cleared {
+.minesweeper-item.-cleared {
 	border: solid 1px #eee;
 	background: white;
 	color: #888;
 	cursor: default;
 }
-.minesweeper-board-item.-flagged {
+.minesweeper-item.-flagged {
 	border: solid 1px #eee;
 	background: #4aff86;
 	color: #888;
 	cursor: default;
 }
-.minesweeper-board-item.-border {
+.minesweeper-item.-border {
 	border: solid 1px #666;
 	background: #666;
 	color: #eee;
 	text-indent: 0;
 }
-.minesweeper-board-item.-exploded {
+.minesweeper-item.-exploded {
 	border: solid 1px #666;
 	background: #ff517c;
 	color: #eee;
 }
-.minesweeper-board-item.-exploded.-flagged {
+.minesweeper-item.-exploded.-flagged {
 	background: #00c854;
 }

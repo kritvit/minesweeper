@@ -2,6 +2,8 @@
 
 	'use strict';
 
+	var once = false;
+
 	class Item {
 
 		constructor (game, row, col) {
@@ -10,65 +12,69 @@
 
 			const node = document.createElement('div');
 
-			node.classList.add('minesweeper-board-item');
+			node.classList.add('minesweeper-item');
 
 			node.setAttribute('style', 'flex-basis: '+(100/game.boardSize[0])+'%;');
 
 			node.innerHTML = 'O';
 
-			node.addEventListener('click', function () {
+			node.addEventListener('click', () => {
 				item.clear(true);
 			});
 
-			node.addEventListener('mouseover', function () {
+			node.addEventListener('mouseover', () => {
 				game.currentItem = item;
 			});
 
-			item.isHovered = false;
-			item.node = node;
-			item.row = row;
-			item.col = col;
-			item.isMine = game.mineMap.indexOf(row+','+col) > -1;
-			item.game = game;
+			item.isHovered 	= false;
+
+			item.node 		= node;
+
+			item.row 		= row;
+
+			item.col 		= col;
+
+			item.isMine 	= game.mineMap.indexOf(row+','+col) > -1;
+
+			item.game 		= game;
+
 		}
 
-		eachNeighbour (callback) {
+		forEachNeighbour (callback) {
 
 			const item = this;
 
 			const neighbours = [
-				[0,-1], // before
-				[0,+1], // after
-				[-1,-1], // above before
-				[-1,0], // above
-				[-1,+1], // above after
-				[+1,-1], // below before
-				[+1,0], // below
-				[+1,+1], // below after
+				[0,-1], 	// before
+				[0,1], 		// after
+				[-1,-1], 	// above before
+				[-1,0], 	// above
+				[-1,1], 	// above after
+				[1,-1], 	// below before
+				[1,0], 		// below
+				[1,1], 		// below after
 			];
 
-			let  row = null;
+			neighbours.forEach((neighbour) => {
 
-			let  col = null;
-
-			for (let index = neighbours.length - 1; index >= 0; index--) {
-
-				row = item.row+neighbours[index][0];
-				col = item.col+neighbours[index][1];
+				const row = item.row+neighbour[0];
+				const col = item.col+neighbour[1];
 
 				if (item.game.board[row] && item.game.board[row][col]) {
-					if ('function' === typeof callback) {
-						callback(item.game.board[row][col]);
-					}
+
+					callback(item.game.board[row][col]);
+
 				}
-			}
+
+			});
+
 		}
 
 		getNumber () {
 
 			let number = 0;
 
-			this.eachNeighbour(function (neighbour) {
+			this.forEachNeighbour((neighbour) => {
 				if (neighbour.isMine) {
 					number++;
 				}
@@ -105,8 +111,8 @@
 							item.node.classList.add('-border');
 						} else {
 
-							setTimeout(function () {
-								item.eachNeighbour(function (neighbour) {
+							setTimeout(() => {
+								item.forEachNeighbour((neighbour) => {
 									neighbour.clear(false);
 								});
 							}, 20);
@@ -130,15 +136,15 @@
 			const game = this;
 
 			const boardSizes = {
-				easy: 	[10, 10],
-				medium: [20, 20],
-				hard: 	[30, 30],
+				easy: 		[10, 10],
+				medium: 	[20, 20],
+				hard: 		[30, 30],
 			};
 
 			const minesAmount = {
-				easy: 10,
-				medium: 50,
-				hard: 100,
+				easy: 		10,
+				medium: 	50,
+				hard: 		100,
 			};
 
 			game.node = {
@@ -152,7 +158,7 @@
 			game.boardSize 		= boardSizes[game.level];
 			game.minesAmount 	= minesAmount[game.level];
 
-			// Map of board cooardinates.
+			// Map of board coordinates.
 			for (let rowIndex = 0; rowIndex < game.boardSize[1]; rowIndex++) {
 				for (let colIndex = 0; colIndex < game.boardSize[0]; colIndex++) {
 					game.boardMap.push(rowIndex+','+colIndex);
@@ -163,7 +169,7 @@
 			game.initControls();
 			game.initBoard();
 
-			document.addEventListener('keydown', function (event) {
+			document.addEventListener('keydown', (event) => {
 
 				if (32 === event.keyCode) {
 
@@ -204,7 +210,7 @@
 			game.currentItem 			= null;
 			game.node.board.innerHTML 	= '';
 
-			// Map of mine cooardinates.
+			// Map of mine coordinates.
 			while (game.mineMap.length < game.minesAmount) {
 
 				const randomIndex = Math.floor((Math.random() * game.boardMap.length));
@@ -255,20 +261,19 @@
 			
 			window.console.log('gameOver');
 
-			const game = this;
+			this.mineMap.forEach((coordinates) => {
 
-			for (let i = 0; i < game.mineMap.length; i++) {
-
-				const rowCol 	= game.mineMap[i].split(',');
+				const rowCol 	= coordinates.split(',');
 				const row 		= parseInt(rowCol[0]);
 				const col 		= parseInt(rowCol[1]);
-				const item 		= game.board[row][col];
+				const item 		= this.board[row][col];
 
 				item.node.classList.add('-cleared', '-exploded');
 				item.isCleared = true;
 				item.node.innerHTML = 'X';
 
-			}
+			});
+
 		}
 
 		restart () {
@@ -291,16 +296,10 @@
 
 	}
 
-	(function () {
+	document.querySelectorAll('.minesweeper').forEach((board) => {
 
-		const minesweeper = document.querySelectorAll('.minesweeper');
+		new Game(board);
 
-		for (let index = 0; index < minesweeper.length; index++) {
-
-			new Game(minesweeper[index]);
-
-		}
-
-	}());
+	});
 
 }(window || {}, document || {}));
