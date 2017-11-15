@@ -12,6 +12,9 @@
 				<button type="button" class="controls-level" data-level="0">easy</button>
 				<button type="button" class="controls-level" data-level="1">medium</button>
 				<button type="button" class="controls-level"  data-level="2">hard</button>
+				<p>HELP</p>
+				<p>Start game by clicking on a square.</p>
+				<p>To flag a square, press space bar while hovering.</p>
 				<br><br>
 				<button type="button" class="expand-toggle">settings</button>
 			</div>
