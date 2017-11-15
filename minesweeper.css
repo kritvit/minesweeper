@@ -45,9 +45,16 @@ body {
 	background: white;
 	font-family: Helvetica, Arial, sans-serif;
 }
+.minesweeper-status .status {
+	float: left;
+}
 .minesweeper-status .flagged {
+	float: left;
 	padding: 5px 10px;
 	font-weight: bold;
+}
+.minesweeper-status .reset {
+	float: left;
 }
 .minesweeper-board {
 	border: solid 1px #888;

@@ -2,6 +2,31 @@
 
 	'use strict';
 
+	const minesweeperTmpl = function () {
+
+		const template = `
+
+			<div class="minesweeper-controls">
+				<br><br>
+				<p>SETTINGS</p>
+				<br><br>
+				<button type="button" class="expand-toggle">settings</button>
+			</div>
+
+			<div class="minesweeper-status">
+				<button type="button" class="reset">reset</button>
+				<div class="flagged">Hover item and press space to flag item</div>
+				<div class="status"></div>
+			</div>
+
+			<div class="minesweeper-board"></div>
+
+		`;
+
+		return template;
+
+	}
+
 	class Item {
 
 		constructor (game, row, col) {
@@ -86,7 +111,7 @@
 			const item = this;
 			const game = item.game;
 
-			if (!item.isCleared) {
+			if (!item.isCleared && item.game.state.isOn) {
 
 				if (item.isFlagged) {
 
@@ -113,6 +138,10 @@
 		clear (clicked) {
 
 			const item = this;
+
+			if (clicked && !item.game.state.isOn) {
+				item.game.start();
+			}
 
 			if (item.isMine && !item.isFlagged) {
 
@@ -250,6 +279,7 @@
 			}
 
 			// Create/append board items.
+
 			game.boardMap.forEach((coordinates) => {
 
 				const rowCol 			= coordinates.split(',');
@@ -350,6 +380,7 @@
 						item.flag();
 					}
 				});
+				game.state.isOn = false;
 				game.selectNode('.status').innerHTML = 'Game Finished!';
 			}
 
@@ -365,6 +396,7 @@
 					}
 
 				});
+				game.state.isOn = false;
 				game.selectNode('.status').innerHTML = 'Game Over!';
 			}
 
@@ -386,7 +418,12 @@
 
 		}
 
-		timerStart () {}
+		start () {
+
+			console.log('startGame');
+			this.state.isOn = true;
+
+		}
 
 		timerStop () {}
 
@@ -399,6 +436,8 @@
 	}
 
 	document.querySelectorAll('.minesweeper').forEach((board) => {
+
+		board.innerHTML = minesweeperTmpl();
 
 		new Game(board);
 
