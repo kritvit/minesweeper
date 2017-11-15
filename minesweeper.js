@@ -9,6 +9,9 @@
 			<div class="minesweeper-controls">
 				<br><br>
 				<p>SETTINGS</p>
+				<button type="button" class="controls-level" data-level="0">easy</button>
+				<button type="button" class="controls-level" data-level="1">medium</button>
+				<button type="button" class="controls-level"  data-level="2">hard</button>
 				<br><br>
 				<button type="button" class="expand-toggle">settings</button>
 			</div>
@@ -198,15 +201,15 @@
 			const game = this;
 
 			const boardSizes = {
-				easy: 		[10, 10],
-				medium: 	[20, 20],
-				hard: 		[30, 30],
+				0: [10, 10],
+				1: [20, 20],
+				2: [30, 30]
 			};
 
 			const minesAmount = {
-				easy: 		10,
-				medium: 	50,
-				hard: 		100,
+				0: 10,
+				1: 50,
+				2: 100
 			};
 
 			game.state = {};
@@ -219,7 +222,7 @@
 				controls: 	wrapperNode.querySelector('.minesweeper-controls')
 			};
 
-			game.level 			= wrapperNode.getAttribute('data-level') || 'easy';
+			game.level 			= 1;
 			game.boardMap 		= [];
 			game.boardSize 		= boardSizes[game.level];
 			game.minesAmount 	= minesAmount[game.level];
@@ -248,11 +251,13 @@
 			});
 		}
 
-		initBoard () {
+		initBoard (config) {
 			
 			window.console.log(this);
 
 			const game 					= this;
+
+			config 						= config || {};
 
 			game.board 					= {};
 			game.boardArray 			= [];
@@ -304,12 +309,55 @@
 			this.node.controls.querySelector('.expand-toggle').addEventListener('click', () => {
 				this.node.controls.classList.toggle('-expanded');
 			});
+
+			this.node.controls.querySelectorAll('.controls-level').forEach((node) => {
+				node.addEventListener('click', () => {
+
+					const level = parseInt(node.dataset.level);
+
+					if (typeof level === 'number') {
+
+						this.changeLevel(level);
+
+					}
+
+				});
+			});
 		}
 
 		initStatus () {
 			this.node.status.querySelector('.reset').addEventListener('click', () => {
 				this.restart();
 			});
+		}
+
+		changeLevel (level) {
+
+			const boardSizes = {
+				0: [10, 10],
+				1: [20, 20],
+				2: [30, 30]
+			};
+
+			const minesAmount = {
+				0: 10,
+				1: 50,
+				2: 100
+			};
+
+			this.boardMap 		= [];
+			this.boardSize 		= boardSizes[level];
+			this.minesAmount 	= minesAmount[level];
+
+			// Map of board coordinates.
+			for (let rowIndex = 0; rowIndex < this.boardSize[1]; rowIndex++) {
+				for (let colIndex = 0; colIndex < this.boardSize[0]; colIndex++) {
+					this.boardMap.push(rowIndex+','+colIndex);
+				}
+			}
+
+			this.initBoard({level: level});
+
 		}
 
 		forEachItem (callback) {
@@ -366,7 +414,7 @@
 
 			game.selectNode('.status').innerHTML = '';
 
-			if (game.hasNewStateValue('flagged')) {
+			if (state.flagged === 0 || game.hasNewStateValue('flagged')) {
 				game.selectNode('.flagged').innerHTML = 'Flagged: '+state.flagged+'/'+game.mineMap.length;
 			}
 
