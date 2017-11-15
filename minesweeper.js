@@ -2,8 +2,6 @@
 
 	'use strict';
 
-	var once = false;
-
 	class Item {
 
 		constructor (game, row, col) {
@@ -83,15 +81,50 @@
 			return number;
 		}
 
+		flag () {
+
+			const item = this;
+			const game = item.game;
+
+			if (!item.isCleared) {
+
+				if (item.isFlagged) {
+
+					game.state.flagged 	= game.state.flagged-1;
+					item.isFlagged 		= false;
+
+					item.node.classList.remove('-flagged');
+
+				} else {
+
+					game.state.flagged 	= game.state.flagged+1;
+					item.isFlagged 		= true;
+
+					item.node.classList.add('-flagged');
+
+				}
+
+				game.render();
+
+			}
+
+		}
+
 		clear (clicked) {
 
 			const item = this;
 
 			if (item.isMine && !item.isFlagged) {
-				if (clicked) {
 
-					item.game.gameOver();
+				item.isCleared = true;
+				item.node.innerHTML = 'X';
+				item.node.classList.add('-cleared', '-exploded');
+
+				if (clicked) {
+					item.game.state.isLost = true;
+					item.game.render();
 				}
+
 			} else if (!item.isCleared && !item.isFlagged) {
 
 				const board 	= item.game.board;
@@ -104,7 +137,7 @@
 
 						item.node.classList.add('-cleared');
 						item.isCleared = true;
-						item.game.cleared = item.game.cleared+1;
+						item.game.state.cleared = item.game.state.cleared++;
 
 						if (number > 0) {
 							item.node.innerHTML = number;
@@ -120,7 +153,7 @@
 
 						}
 
-						item.game.updateCleared();
+						item.game.render();
 
 					}
 				}
@@ -147,6 +180,10 @@
 				hard: 		100,
 			};
 
+			game.state = {};
+
+			game.prevState = {};
+
 			game.node = {
 				board: 		wrapperNode.querySelector('.minesweeper-board'),
 				status: 	wrapperNode.querySelector('.minesweeper-status'),
@@ -171,29 +208,14 @@
 
 			document.addEventListener('keydown', (event) => {
 
-				if (32 === event.keyCode) {
+				switch (event.keyCode) {
 
-					if (game.currentItem.isFlagged) {
-
-						game.flagged = game.flagged-1;
-						game.cleared = game.cleared-1;
-						game.currentItem.isFlagged = false;
-						game.currentItem.node.classList.remove('-flagged');
-
-					} else {
-
-						game.flagged = game.flagged+1;
-						game.cleared = game.cleared+1;
-						game.currentItem.isFlagged = true;
-						game.currentItem.node.classList.add('-flagged');
-
-					}
-
-					game.updateCleared();
-
-					game.node.status.querySelector('.flagged').innerHTML = game.flagged+'/'+game.mineMap.length;
+					case 32:
+						game.currentItem.flag();
+						break;
 
 				}
+
 			});
 		}
 
@@ -204,11 +226,18 @@
 			const game 					= this;
 
 			game.board 					= {};
+			game.boardArray 			= [];
 			game.mineMap 				= [];
-			game.cleared 				= 0;
-			game.flagged 				= 0;
 			game.currentItem 			= null;
 			game.node.board.innerHTML 	= '';
+
+			game.state = {
+				flagged: 	0,
+				cleared: 	0,
+				isOn: 		false,
+				isWon: 		false,
+				isLost: 	false
+			};
 
 			// Map of mine coordinates.
 			while (game.mineMap.length < game.minesAmount) {
@@ -231,11 +260,13 @@
 				game.board[row] 		= game.board[row] || {};
 				game.board[row][col] 	= item;
 
+				game.boardArray.push(item);
+
 				game.node.board.append(item.node);
 
 			});
 
-			game.updateCleared();
+			game.render();
 
 		}
 
@@ -251,28 +282,101 @@
 			});
 		}
 
-		updateCleared () {
+		forEachItem (callback) {
+			this.boardArray.forEach((item) => {
+				callback(item);
+			});
+		}
 
-			this.node.status.querySelector('.cleared').innerHTML = this.cleared+'/'+this.boardMap.length;
+		forEachMine (callback) {
+			this.mineMap.forEach((coordinates) => {
+
+				const rowCol 	= coordinates.split(',');
+				const row 		= parseInt(rowCol[0]);
+				const col 		= parseInt(rowCol[1]);
+
+				callback(this.board[row][col]);
+
+			});
+		}
+
+		selectNode (selector) {
+			return this.node.status.querySelector(selector);
+		}
+
+		evaluate () {
+
+			let itemsLeft = 0;
+
+			this.forEachItem((item) => {
+
+				if (!item.isMine && !item.isCleared) {
+					itemsLeft++;
+				}
+
+			});
+
+			if (itemsLeft === 0) {
+				this.state.isWon = true;
+			}
+
+		}
+
+		hasNewStateValue (property) {
+			return this.state[property] !== this.prevState[property];
+		}
+
+		render () {
+
+			const game 		= this;
+
+			const state 	= game.state;
+
+			game.evaluate();
+
+			game.selectNode('.status').innerHTML = '';
+
+			if (game.hasNewStateValue('flagged')) {
+				game.selectNode('.flagged').innerHTML = 'Flagged: '+state.flagged+'/'+game.mineMap.length;
+			}
+
+			if (game.hasNewStateValue('isOn')) {
+
+			}
+
+			if (game.state.isWon) {
+				game.forEachItem((item) => {
+					if (!item.isFlagged) {
+						item.flag();
+					}
+				});
+				game.selectNode('.status').innerHTML = 'Game Finished!';
+			}
+
+			if (game.state.isLost) {
+				game.forEachMine((item) => {
+
+					if (item.isFlagged) {
+						item.flag();
+					}
+
+					if (!item.isCleared) {
+						item.clear();
+					}
+
+				});
+				game.selectNode('.status').innerHTML = 'Game Over!';
+			}
+
+			Object.keys(state).forEach((property) => {
+				this.prevState[property] = state[property];
+			});
 
 		}
 
 		gameOver () {
 			
 			window.console.log('gameOver');
-
-			this.mineMap.forEach((coordinates) => {
-
-				const rowCol 	= coordinates.split(',');
-				const row 		= parseInt(rowCol[0]);
-				const col 		= parseInt(rowCol[1]);
-				const item 		= this.board[row][col];
-
-				item.node.classList.add('-cleared', '-exploded');
-				item.isCleared = true;
-				item.node.innerHTML = 'X';
-
-			});
 
 		}
 
@@ -291,8 +395,6 @@
 		pause () {}
 
 		resume () {}
-
-		finished () {}
 
 	}
 

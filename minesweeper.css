@@ -43,6 +43,11 @@ body {
 .minesweeper-status {
 	
 	background: white;
+	font-family: Helvetica, Arial, sans-serif;
+}
+.minesweeper-status .flagged {
+	padding: 5px 10px;
+	font-weight: bold;
 }
 .minesweeper-board {
 	border: solid 1px #888;
