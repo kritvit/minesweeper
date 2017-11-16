@@ -48,7 +48,7 @@
 			node.innerHTML = 'O';
 
 			node.addEventListener('click', () => {
-				item.clear(true);
+				item.clear('click');
 			});
 
 			node.addEventListener('mouseover', () => {
@@ -141,21 +141,21 @@
 
 		}
 
-		clear (clicked) {
+		clear (event) {
 
 			const item = this;
 
-			if (clicked && !item.game.state.isOn) {
+			if (event === 'click' && !item.game.state.isOn) {
 				item.game.start();
 			}
 
-			if (item.isMine && !item.isFlagged) {
+			if (item.isMine && !item.isFlagged || event === 'game-over') {
 
 				item.isCleared = true;
 				item.node.innerHTML = 'X';
 				item.node.classList.add('-cleared', '-exploded');
 
-				if (clicked) {
+				if (event === 'click') {
 					item.game.state.isLost = true;
 					item.game.render();
 				}
@@ -181,7 +181,7 @@
 
 							setTimeout(() => {
 								item.forEachNeighbour((neighbour) => {
-									neighbour.clear(false);
+									neighbour.clear();
 								});
 							}, 20);
 							
@@ -437,13 +437,8 @@
 
 			if (game.state.isLost) {
 				game.forEachMine((item) => {
-
-					if (item.isFlagged) {
-						item.flag();
-					}
-
 					if (!item.isCleared) {
-						item.clear();
+						item.clear('game-over');
 					}
 
 				});

@@ -67,14 +67,16 @@ body {
 .minesweeper-item {
 	cursor: pointer;
 	box-sizing: border-box;
-	text-align: center;
 	background: #ddd;
 	overflow: hidden;
 	border: solid 1px #888;
 	color: #888;
-	text-indent: 100%;
+	text-indent: 200%;
 	transition: background .5s ease-in-out, border-color .5s ease-in-out;
 	/*transform: scale(2);*/
+	display: flex;
+    justify-content: center;
+    align-items: center;
 
 	flex-grow: 1;
 }
@@ -88,22 +90,23 @@ body {
 	cursor: default;
 }
 .minesweeper-item.-flagged {
-	border: solid 1px #eee;
+	border: solid 1px #3bcc6b;
 	background: #4aff86;
 	color: #888;
 	cursor: default;
 }
 .minesweeper-item.-border {
-	border: solid 1px #666;
+	border: solid 1px #777;
 	background: #666;
 	color: #eee;
 	text-indent: 0;
 }
 .minesweeper-item.-exploded {
-	border: solid 1px #666;
+	border: solid 1px #e0476d;
 	background: #ff517c;
 	color: #eee;
 }
 .minesweeper-item.-exploded.-flagged {
-	background: #00c854;
+	border: solid 1px #159e43;
+	background: #19b94e;
 }
