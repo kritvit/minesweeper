@@ -35,26 +35,53 @@ body {
 	right: 100%;
 	top: 0;
 	border: none;
+	border-radius: 0;
 	background: rgba(0,0,0,.8);
+	display: inline-block;
+	overflow: hidden;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
 	color: white;
-	padding: .4rem 1rem;
+	white-space: nowrap;
+	padding: 0 1rem;
+    line-height: 30px;
 }
 .minesweeper-controls .expand-toggle:focus {
 	outline: none;
 }
 .minesweeper-status {
-	background: white;
+	background: #4aff86;
 }
 .minesweeper-status .status {
 	float: left;
+	padding: 0 1rem;
+	line-height: 30px;
 }
 .minesweeper-status .flagged {
 	float: left;
-	padding: 5px 10px;
+	padding: 0 1rem;
+	line-height: 30px;
 	font-weight: bold;
 }
 .minesweeper-status .reset {
 	float: left;
+	cursor: pointer;
+	width: 20px;
+	height: 20px;
+	margin: 5px;
+	border: none;
+	border-radius: 0;
+	background: none;
+	display: inline-block;
+	position: relative;
+	overflow: hidden;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	color: white;
+	background-image: url(assets/icons/reload.svg);
+	background-repeat: no-repeat;
+	background-size: 16px;
+	background-position: center;
 }
 .minesweeper-board {
 	border: solid 1px #888;
@@ -71,7 +98,7 @@ body {
 	overflow: hidden;
 	border: solid 1px #888;
 	color: #888;
-	text-indent: 200%;
+	text-indent: 10000px;
 	transition: background .5s ease-in-out, border-color .5s ease-in-out;
 	/*transform: scale(2);*/
 	display: flex;
@@ -81,7 +108,7 @@ body {
 	flex-grow: 1;
 }
 .minesweeper-item:hover {
-	background: #666;
+	background: #ccc;
 }
 .minesweeper-item.-cleared {
 	border: solid 1px #eee;

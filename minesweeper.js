@@ -8,19 +8,20 @@
 
 			<div class="minesweeper-controls">
 				<br><br>
-				<p>SETTINGS</p>
+				<p>- SETTINGS -</p>
 				<button type="button" class="controls-level" data-level="0">easy</button>
 				<button type="button" class="controls-level" data-level="1">medium</button>
 				<button type="button" class="controls-level"  data-level="2">hard</button>
-				<p>HELP</p>
+				<br><br>
+				<p>- INFO -</p>
 				<p>Start game by clicking on a square.</p>
 				<p>To flag a square, press space bar while hovering.</p>
 				<br><br>
-				<button type="button" class="expand-toggle">settings</button>
+				<button type="button" class="expand-toggle" title="Configure Game">Settings / Info</button>
 			</div>
 
 			<div class="minesweeper-status">
-				<button type="button" class="reset">reset</button>
+				<button type="button" class="reset" title="Reset Game"></button>
 				<div class="flagged">Hover item and press space to flag item</div>
 				<div class="status"></div>
 			</div>
