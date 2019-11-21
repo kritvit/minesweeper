@@ -14,9 +14,7 @@ button {
 	font-size: 1rem;
 	line-height: 1.5rem;
 	vertical-align: middle;
-}
-button.minesweeper-reset {
-	font-size: 1.5rem;
+	user-select: none;
 }
 button.-is-current {
 	background: rgb(185, 185, 185);
@@ -28,20 +26,23 @@ button:focus {
 	position: relative;
 	display: flex;
 	flex-direction: column;
+	height: 100vh;
+	overflow: hidden;
 }
 .minesweeper-controls {
 	box-sizing: border-box;
-	width: 280px;
+	width: 400px;
 	height: 100vh;
 	position: absolute;
 	top: 0;
 	bottom: 0;
-	right: -280px;
+	right: -400px;
 	padding: 2rem;
 	color: white;
 	background: rgba(0,0,0,.8);
 	transition: right .3s ease-in-out;
 	font-size: .8rem;
+	z-index: 1;
 }
 .minesweeper-controls .controls-level {
 	margin: .5rem;
@@ -56,7 +57,7 @@ button:focus {
 	position: absolute;
 	right: 100%;
 	top: 0;
-	border: none;
+	border: 0;
 	border-radius: 0;
 	background: rgba(0,0,0,.8);
 	display: inline-block;
@@ -68,9 +69,11 @@ button:focus {
     font-size: .8rem;
     padding: .5rem;
     line-height: 1.5rem;
+    margin: 0;
+    z-index: 2;
 }
-.minesweeper-controls .minesweeper-expand-toggle:focus {
-	outline: none;
+.minesweeper-controls .minesweeper-expand-toggle span {
+	pointer-events: none;
 }
 .minesweeper-status {
 	max-height: 15vh;
@@ -92,13 +95,10 @@ button:focus {
 }
 .minesweeper-status .minesweeper-reset {
 	cursor: pointer;
-	margin: .1rem;
-	border: none;
+	border: 0;
 	border-radius: 0;
-	background: none;
-	display: inline-block;
+	background: inherit;
 	position: relative;
-	overflow: hidden;
 	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;
 	color: #333;
@@ -111,6 +111,16 @@ button:focus {
 	display: flex;
 	flex-flow: row wrap;
 	max-width: 85vh;
+	max-height: 100vw;
+}
+.minesweeper-board.-is-easy {
+	font-size: 2rem;
+}
+.minesweeper-board.-is-medium {
+	font-size: 1.2rem;
+}
+.minesweeper-board.-is-hard {
+	font-size: 0.8rem;
 }
 .minesweeper-item {
 	cursor: pointer;
@@ -124,6 +134,7 @@ button:focus {
 	justify-content: center;
 	align-items: center;
 	flex-grow: 1;
+	user-select: none;
 }
 .minesweeper-item:after {
 	content: " ";
@@ -151,4 +162,23 @@ button:focus {
 .minesweeper-item.-is-triggered {
 	background: rgb(255, 46, 81);
 	cursor: default;
+}
+
+@media only screen and (max-width: 667px) {
+	.-hide-small {
+		display: none !important;
+	}
+	.minesweeper-controls {
+		width: 70vw;
+		right: -70vw;
+	}
+	.minesweeper-board.-is-easy {
+		font-size: 1.2rem;
+	}
+	.minesweeper-board.-is-medium {
+		font-size: 0.6rem;
+	}
+	.minesweeper-board.-is-hard {
+		font-size: 0.3rem;
+	}
 }

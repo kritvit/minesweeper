@@ -37,17 +37,17 @@
 					clear hovered item
 				</p>
 				<br><br>
-				<button type="button" class="minesweeper-expand-toggle" title="Configure Game">Settings / Info &#x2699;</button>
+				<button type="button" class="minesweeper-expand-toggle" title="Configure Game"><span class="-hide-small">Settings / Info </span>&#x2699;</button>
 			</div>
 
 			<div class="minesweeper-status">
 				<button type="button" class="minesweeper-reset" title="Reset Game">&#x267b;</button>
 				<div class="item">&#x1f6a9; <span class="marked"></span></div>
-				<div class="item">Cleared: <span class="progress"></span></div>
+				<div class="item"><span class="-hide-small">Cleared: </span><span class="progress"></span></div>
 				<div class="item"><div class="status"></div></div>
 			</div>
 
-			<div class="minesweeper-board"></div>
+			<div class="minesweeper-board -is-easy"></div>
 
 		`;
 
@@ -153,9 +153,9 @@
 				minesweeperEngine: window.minesweeperEngine(),
 				level: 'easy',
 				levels: {
-					easy: 	[10, 10, 10],
-					medium: [20, 20, 50],
-					hard: 	[30, 30, 100]
+					easy: 	[8, 8, 10],
+					medium: [16, 16, 50],
+					hard: 	[24, 24, 120]
 				},
 				items: {},
 				classnames: []
@@ -230,7 +230,19 @@
 
 					const level = node.dataset.level;
 
-					this.reset(level);
+					if (level !== this.state.level) {
+
+						Object.keys(this.state.levels).forEach(key => {
+
+							this.node.board.classList.remove('-is-'+key);
+
+						});
+
+						this.node.board.classList.add('-is-'+level);
+
+						this.reset(level);
+
+					}
 
 				});
 
