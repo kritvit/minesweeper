@@ -1,35 +1,57 @@
 body {
 	margin: 0;
+	background: rgb(85, 85, 85);
+	color: rgb(185, 185, 185);
+	font-family: Helvetica Neue Ultra UltraLight, Helvetica, Arial, sans-serif;
+	font-weight: 100;
+}
+button {
+	background: rgb(85, 85, 85);
+	cursor: pointer;
+	border: 0;
+	border-radius: 0;
+	backface-visibility: hidden;
+	font-size: 1rem;
+	line-height: 1.5rem;
+	vertical-align: middle;
+}
+button.minesweeper-reset {
+	font-size: 1.5rem;
+}
+button.-is-current {
+	background: rgb(185, 185, 185);
+}
+button:focus {
+	outline: none;
 }
 .minesweeper {
-	font-family: Helvetica, Arial, sans-serif;
-	font-size: 12px;
 	position: relative;
-	overflow: hidden;	
-	width: 100%;
-	height: 100vh;
-	background: gold;
+	overflow: hidden;
 	display: flex;
 	flex-direction: column;
 }
 .minesweeper-controls {
 	box-sizing: border-box;
-	width: 150px;
+	width: 280px;
 	position: absolute;
 	top: 0;
 	bottom: 0;
-	right: -150px;
+	right: -280px;
 	padding: 2rem;
 	color: white;
-	text-align: center;
 	background: rgba(0,0,0,.8);
 	transition: right .3s ease-in-out;
+	font-size: .8rem;
+}
+.minesweeper-controls .controls-level {
+	margin: .5rem;
+	display: block;
 }
 .minesweeper-controls.-expanded {
 	right: 0;
 	left: inherit;
 }
-.minesweeper-controls .expand-toggle {
+.minesweeper-controls .minesweeper-expand-toggle {
 	cursor: pointer;
 	position: absolute;
 	right: 100%;
@@ -43,32 +65,33 @@ body {
 	backface-visibility: hidden;
 	color: white;
 	white-space: nowrap;
-	padding: 0 1rem;
-    line-height: 30px;
+    font-size: .8rem;
+    padding: .5rem;
+    line-height: 1.5rem;
 }
-.minesweeper-controls .expand-toggle:focus {
+.minesweeper-controls .minesweeper-expand-toggle:focus {
 	outline: none;
 }
 .minesweeper-status {
-	background: #4aff86;
+	background: #4ac78f;
+	color: #333;
+	font-size: .8rem;
+	display: flex;
+	align-items: center;
 }
-.minesweeper-status .status {
-	float: left;
-	padding: 0 1rem;
-	line-height: 30px;
+.minesweeper-status .item {
+	border-left: solid 2px rgb(85, 85, 85);
+	padding: .5rem;
+	line-height: 1.5rem;
 }
 .minesweeper-status .flagged {
-	float: left;
 	padding: 0 1rem;
 	line-height: 30px;
 	font-weight: bold;
 }
-.minesweeper-status .reset {
-	float: left;
+.minesweeper-status .minesweeper-reset {
 	cursor: pointer;
-	width: 20px;
-	height: 20px;
-	margin: 5px;
+	margin: .1rem;
 	border: none;
 	border-radius: 0;
 	background: none;
@@ -77,63 +100,54 @@ body {
 	overflow: hidden;
 	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;
-	color: white;
-	background-image: url(assets/icons/reload.svg);
-	background-repeat: no-repeat;
-	background-size: 16px;
-	background-position: center;
+	color: #333;
+	font-size: 1.5rem;
 }
 .minesweeper-board {
-	border: solid 1px #888;
+	border: solid 1px rgb(85, 85, 85);
 	box-sizing: border-box;
-
 	flex-grow: 1;
 	display: flex;
-		flex-flow: row wrap;
+	flex-flow: row wrap;
+	max-width: 75vh;
 }
 .minesweeper-item {
 	cursor: pointer;
 	box-sizing: border-box;
-	background: #ddd;
+	background: rgb(185, 185, 185);
 	overflow: hidden;
-	border: solid 1px #888;
-	color: #888;
-	text-indent: 10000px;
-	transition: background .5s ease-in-out, border-color .5s ease-in-out;
-	/*transform: scale(2);*/
+	border: solid 1px rgb(85, 85, 85);
+	color: rgb(85, 85, 85);
+	transition: background .2s ease-out, border-color .2s ease-out;
 	display: flex;
-    justify-content: center;
-    align-items: center;
-
+	justify-content: center;
+	align-items: center;
 	flex-grow: 1;
 }
+.minesweeper-item:after {
+	content: " ";
+	padding-top: 100%;
+}
 .minesweeper-item:hover {
-	background: #ccc;
+	background: rgb(195, 195, 195);
 }
-.minesweeper-item.-cleared {
-	border: solid 1px #eee;
-	background: white;
-	color: #888;
+.minesweeper-item.-is-cleared {
+	background: rgb(138, 138, 138);
 	cursor: default;
 }
-.minesweeper-item.-flagged {
-	border: solid 1px #3bcc6b;
-	background: #4aff86;
-	color: #888;
+.minesweeper-item.-is-marked {
+	background: rgb(216, 203, 19);
 	cursor: default;
 }
-.minesweeper-item.-border {
-	border: solid 1px #777;
-	background: #666;
-	color: #eee;
-	text-indent: 0;
+.minesweeper-item.-is-missmarked {
+	background: rgb(187, 158, 30);
+	cursor: default;
 }
-.minesweeper-item.-exploded {
-	border: solid 1px #e0476d;
-	background: #ff517c;
-	color: #eee;
+.minesweeper-item.-is-exposed {
+	background: rgb(250, 116, 138);
+	cursor: default;
 }
-.minesweeper-item.-exploded.-flagged {
-	border: solid 1px #159e43;
-	background: #19b94e;
+.minesweeper-item.-is-triggered {
+	background: rgb(255, 46, 81);
+	cursor: default;
 }
