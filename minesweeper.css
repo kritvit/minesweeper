@@ -26,13 +26,13 @@ button:focus {
 }
 .minesweeper {
 	position: relative;
-	overflow: hidden;
 	display: flex;
 	flex-direction: column;
 }
 .minesweeper-controls {
 	box-sizing: border-box;
 	width: 280px;
+	height: 100vh;
 	position: absolute;
 	top: 0;
 	bottom: 0;
@@ -73,7 +73,8 @@ button:focus {
 	outline: none;
 }
 .minesweeper-status {
-	background: #4ac78f;
+	max-height: 15vh;
+	background: #55c191;
 	color: #333;
 	font-size: .8rem;
 	display: flex;
@@ -109,7 +110,7 @@ button:focus {
 	flex-grow: 1;
 	display: flex;
 	flex-flow: row wrap;
-	max-width: 75vh;
+	max-width: 85vh;
 }
 .minesweeper-item {
 	cursor: pointer;
